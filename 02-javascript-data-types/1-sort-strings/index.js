@@ -6,4 +6,10 @@
  */
 export function sortStrings(arr, param = 'asc') {
 
+    return [...arr].sort(
+        function(a, b){
+            let ret = a.localeCompare(b, 'ru-u-kf-upper');
+            return param === 'asc' ? ret : -ret;
+        }
+    );
 }
