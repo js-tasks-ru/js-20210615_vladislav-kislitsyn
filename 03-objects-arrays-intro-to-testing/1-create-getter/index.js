@@ -5,27 +5,29 @@
  */
 export function createGetter(path) {
 
+    const pathArray = path.split('.');
+
     // getter itself
     return function getter(obj){
-        
-        const pathArray = path.split('.');
 
+        const pathIterator = pathArray[Symbol.iterator]();
         // function expression to finally return property value
-        const innerFun = function inner(obj, properties){
-            
+        const innerFun = function inner(obj, iterator, property){
+
             if(obj === undefined)
                 return obj;
 
-            const property = properties.shift();
-            if (!properties.length){
+            const result = iterator.next();
+            if (result.done){
                 return obj[property];
             }
 
-            return inner(obj[property], properties);
-        }
+            return inner(obj[property], iterator, result.value);
+        };
 
+        const {value, done} = pathIterator.next();
         // returns target property value
-        return innerFun(obj, pathArray);
+        return innerFun(obj, pathIterator, value);
 
     };
 
