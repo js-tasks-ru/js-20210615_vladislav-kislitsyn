@@ -85,14 +85,7 @@ export default class SortableTable {
     this.subElements.body.innerHTML = this.getTableRows(sortedData);
   };
 
-  //-----------------------------------------------------------------
-
-  getTableHeader() {
-    return `<div data-element="header" class="sortable-table__header sortable-table__row">
-      ${this.headerConfig.map(item => this.getHeaderRow(item)).join('')}
-    </div>`;
-  }
-
+  // added data-order tag
   getHeaderRow({ id, title, sortable }) {
     const order = this.sorted.id === id ? this.sorted.order : 'asc';
 
@@ -103,16 +96,28 @@ export default class SortableTable {
     `;
   }
 
+  // logic for sorting arrow
   getHeaderSortingArrow(id) {
-    const isOrderExist = this.sorted.id === id ? this.sorted.order : '';
+    let ret = "";
+    if (this.sorted.id === id){
+      ret = `<span data-element="arrow" class="sortable-table__sort-arrow">
+              <span class="sort-arrow"></span>
+            </span>`
+    }
 
-    return isOrderExist
-      ? `<span data-element="arrow" class="sortable-table__sort-arrow">
-          <span class="sort-arrow"></span>
-        </span>`
-      : '';
+    return ret;
   }
-  Sales
+
+  //-----------------------------------------------------------------
+
+  getTableHeader() {
+    return `<div data-element="header" class="sortable-table__header sortable-table__row">
+      ${this.headerConfig.map(item => this.getHeaderRow(item)).join('')}
+    </div>`;
+  }
+
+  getTableBody(data) {
+    return `
       <div data-element="body" class="sortable-table__body">
         ${this.getTableRows(data)}
       </div>`;
